@@ -1,6 +1,6 @@
 import Policies from "@/components/Policies";
 
-export default function Home() {
+export default function YourPolicy() {
   return (
     <div>
       <div>
