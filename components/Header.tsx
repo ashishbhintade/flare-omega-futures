@@ -3,32 +3,30 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ConnectWallet from "./ConnectButton";
-import Container from "./Container";
+import { useWalletConnection } from "@/hooks/useWalletConnection";
 
 export default function Header() {
   const pathname = usePathname();
+  const { account } = useWalletConnection();
 
   const navItems = [
-    { href: "/", label: "Policies" },
-    { href: "/your-policy", label: "Your Policies" },
-    { href: "/create-policy", label: "Create Polices" },
-    { href: "/modify-policy", label: "Modify Policies" },
+    { href: "/", label: "Futures" },
+    { href: "/your-futures", label: "Your Futures" },
+    { href: "/create-futures", label: "Create Futures" },
   ];
 
   return (
-    // <Container>
     <div className="mx-auto top-0 z-50 h-16 flex items-center justify-between">
-      {/* Left: Logo */}
       <Link href="/" className="text-xl font-bold text-white">
-        MacroGuard
+        OmegaFutures
       </Link>
 
-      {/* Center: Navigation links */}
       <div className="space-x-12 font-semibold hidden md:flex text-black">
         {navItems.map(({ href, label }) => {
           const isActive =
             pathname === href || (href === "/about" && pathname === "/");
-          return (
+
+          return account ? (
             <Link
               key={href}
               href={href}
@@ -38,15 +36,21 @@ export default function Header() {
             >
               {label}
             </Link>
+          ) : (
+            <span
+              key={href}
+              className="text-gray-300 cursor-not-allowed"
+              title="Connect wallet to access"
+            >
+              {label}
+            </span>
           );
         })}
       </div>
 
-      {/* Right: Connect Wallet */}
       <div className="w-32">
         <ConnectWallet />
       </div>
     </div>
-    // </Container>
   );
 }

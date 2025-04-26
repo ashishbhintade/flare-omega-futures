@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function CreatePolicy() {
+export default function CreateFuture() {
   const [formData, setFormData] = useState({
     indicator: "",
     trigger: "",

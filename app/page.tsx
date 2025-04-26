@@ -1,11 +1,10 @@
-import Policies from "@/components/Policies";
+"use client";
+
+import Futures from "@/components/Futures";
+import NotConnected from "@/components/NotConnected";
+import { useWalletConnection } from "@/hooks/useWalletConnection";
 
 export default function Home() {
-  return (
-    <div>
-      <div>
-        <Policies />
-      </div>
-    </div>
-  );
+  const { isConnected } = useWalletConnection();
+  return <div>{isConnected ? <Futures /> : <NotConnected />}</div>;
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function PolicyForm() {
+export default function ModifyFuture() {
   const [policyId, setPolicyId] = useState("");
 
   const handleSubmit = () => {

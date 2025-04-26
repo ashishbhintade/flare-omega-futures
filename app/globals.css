@@ -33,5 +33,5 @@ a {
 }
 
 .title-bar {
-  height: 30px;
+  height: 30px !important;
 }
