@@ -25,6 +25,10 @@ export default function CreateFuture() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async () => {
     const { commodity, isLong, trigger, expiryDate } = formData;
 
@@ -94,14 +98,14 @@ export default function CreateFuture() {
 
         <div className="field-row-stacked mx-6">
           <label
-            htmlFor="long"
+            htmlFor="isLong"
             className="block text-sm font-medium text-xl text-black"
           >
             Long/Short
           </label>
           <select
-            id="long"
-            name="long"
+            id="isLong"
+            name="isLong"
             value={formData.isLong}
             onChange={handleChange}
             className="w-full p-2 border rounded-md text-black"

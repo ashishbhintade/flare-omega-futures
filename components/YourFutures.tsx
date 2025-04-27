@@ -47,28 +47,51 @@ export default function YourFutures() {
 
         const idNum = Number(currentId);
 
-        const results = await Promise.all(
-          Array.from({ length: idNum }, (_, i) =>
-            publicClient.readContract({
-              address: contractAddress,
-              abi: contractAbi,
-              functionName: "ownerOf",
-              args: [BigInt(i)],
-            })
+        if (!account) return;
+
+        // 1. Find which token IDs belong to the account
+        const ownerResults = await Promise.all(
+          Array.from(
+            { length: idNum },
+            (_, i) =>
+              publicClient
+                .readContract({
+                  address: contractAddress,
+                  abi: contractAbi,
+                  functionName: "ownerOf",
+                  args: [BigInt(i)],
+                })
+                .then((owner) => ({ id: i, owner }))
+                .catch(() => null) // catch errors for missing tokens
           )
         );
 
-        if (!account) {
+        // 2. Filter only tokens owned by the account
+        const ownedTokenIds = ownerResults
+          .filter(
+            (res: any) =>
+              res && res.owner.toLowerCase() === account.toLowerCase()
+          )
+          .map((res: any) => res.id);
+
+        if (ownedTokenIds.length === 0) {
+          setFutures([]);
           return;
         }
 
-        const validResults = results
-          .filter(
-            (res: any) =>
-              res.status === "fulfilled" &&
-              res.value?.toLowerCase() === account.toLowerCase()
+        // 3. Fetch future details for owned tokens
+        const futureDetails = await Promise.all(
+          ownedTokenIds.map((id) =>
+            publicClient
+              .readContract({
+                address: contractAddress,
+                abi: contractAbi,
+                functionName: "contractDetails", // or whatever your function is
+                args: [BigInt(id)],
+              })
+              .then((data) => ({ id, data }))
           )
-          .map((res: any) => res.value);
+        );
 
         const mapStatus = (statusNumber: number): Status => {
           switch (statusNumber) {
@@ -79,107 +102,33 @@ export default function YourFutures() {
             case 2:
               return "redeemed";
             default:
-              return "created"; // or throw an error
+              return "created";
           }
         };
 
-        const futuresFormatted = validResults.map((result: any) => ({
-          buyer: result[0],
-          currentPrice: result[1],
-          trigger: result[2],
-          expiry: result[3],
-          status: mapStatus(result[4]), // we'll define mapStatus below
-          isLong: result[5],
-          commodity: result[6],
+        const futuresFormatted = futureDetails.map(({ id, data }: any) => ({
+          id,
+          buyer: data[0],
+          currentPrice: data[1],
+          trigger: data[2],
+          expiry: data[3],
+          status: mapStatus(Number(data[4])),
+          isLong: data[5],
+          commodity: data[6],
         }));
 
         setFutures(futuresFormatted);
 
-        // setFutures(results as Future[]);
-        console.log("Formatted Data", futuresFormatted);
-        console.log("Results Data", results);
+        console.log("Formatted Futures:", futuresFormatted);
       } catch (err) {
         console.error("Error fetching policies:", err);
       }
     };
 
     if (account) {
-      // Fetch the allowance if wallet is connected
-      const fetchAllowance = async () => {
-        try {
-          const tokenClient = createPublicClient({
-            chain: flareTestnet,
-            transport: http(),
-          });
-
-          const allowance = await tokenClient.readContract({
-            address: tokenAddress,
-            abi: tokenAbi,
-            functionName: "allowance",
-            args: [account, contractAddress], // Check allowance to the Macro Guard contract
-          });
-
-          setAllowance(allowance as bigint); // Set the allowance
-        } catch (err) {
-          console.error("Error fetching allowance:", err);
-        }
-      };
-
-      if (account) {
-        fetchAllowance();
-      }
+      fetchFutures();
     }
-
-    fetchFutures();
   }, [account]);
-
-  const handleApprove = async () => {
-    // const [account] = await client.getAddresses();
-    try {
-      if (!client) {
-        throw new Error("Wallet client could not be created");
-      }
-      if (!account) {
-        throw new Error("Wallet client could not be created");
-      }
-
-      await client.writeContract({
-        account: account,
-        address: tokenAddress,
-        abi: tokenAbi,
-        functionName: "approve",
-        chain: flareTestnet,
-        args: [contractAddress, parseUnits("100000", 18)], // Adjust the amount as needed
-      });
-      console.log("Token approved successfully.");
-      setAllowance(BigInt(1_000_000_000)); // Update allowance after approval
-    } catch (err) {
-      console.error("Error approving token:", err);
-    }
-  };
-
-  const handleBuyPolicy = async (policyId: bigint, premium: bigint) => {
-    // Call the buyPolicy function on the Macro Guard contract
-    try {
-      if (!client) {
-        throw new Error("Wallet client could not be created");
-      }
-      if (!account) {
-        throw new Error("Wallet client could not be created");
-      }
-      await client.writeContract({
-        account: account,
-        address: contractAddress,
-        abi: contractAbi,
-        functionName: "buyPolicy",
-        chain: flareTestnet,
-        args: [policyId],
-      });
-      console.log("Policy bought successfully.");
-    } catch (err) {
-      console.error("Error buying policy:", err);
-    }
-  };
 
   return (
     <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4 py-6">
@@ -208,7 +157,7 @@ export default function YourFutures() {
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
                   <h4 className="text-lg text-black font-bold mb-1">
-                    Commodity Short
+                    {future.commodity} {future.isLong ? "Long" : "Short"}
                   </h4>
                   <p className="text-sm text-black mb-1">
                     Trigger | Expires on{" "}
@@ -220,25 +169,6 @@ export default function YourFutures() {
                     Status : {future.status}
                   </p>
                 </div>
-
-                <button
-                  onClick={() => {
-                    if (allowance >= BigInt(100_000)) {
-                      // handleBuyPolicy(future.id, future.premium);
-                    } else {
-                      handleApprove();
-                    }
-                  }}
-                  className="mt-auto inline-block cursor-pointer text-black"
-                >
-                  {allowance >= BigInt(100_000)
-                    ? `Fulfill @ ${Number(
-                        future.isLong
-                          ? future.trigger - future.currentPrice
-                          : future.currentPrice - future.trigger
-                      ).toLocaleString()}} USDT`
-                    : "Approve Token"}
-                </button>
               </div>
             </div>
           </div>
