@@ -2,6 +2,14 @@
 
 Trade any commodity you like, from potatoes to butter, with ease. Built using Flare FDC, Hardhat, and Next.js on the Flare Coston 2 Testnet.
 
+## Smart Contract
+
+You can check the smart contract here: [https://github.com/ashishbhintade/flare-futures-contract](https://github.com/ashishbhintade/flare-futures-contract)
+
+## Live Demo
+
+You can try the live demo here: [https://flare-omega-futures.vercel.app/](https://flare-omega-futures.vercel.app/)
+
 ## Run the Project Locally
 
 Start by cloning the repository with this command:
@@ -23,10 +31,6 @@ Then start the app:
 ```bash
 yarn dev
 ```
-
-## Live Demo
-
-You can try the live demo here: [https://flare-omega-futures.vercel.app/](https://flare-omega-futures.vercel.app/)
 
 ## Architecture
 
