@@ -193,7 +193,13 @@ export default function Futures() {
             <div className="window-body">
               <div>
                 <Image
-                  src="/image.png"
+                  src={
+                    future.commodity === "Crude Oil"
+                      ? "/crude.jpg"
+                      : future.commodity === "Potato"
+                      ? "/potato.jpeg"
+                      : "/butter.jpeg"
+                  }
                   alt="Commodity Image"
                   width={600}
                   height={300}
