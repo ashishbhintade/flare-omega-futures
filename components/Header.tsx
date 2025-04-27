@@ -13,6 +13,7 @@ export default function Header() {
     { href: "/", label: "Futures" },
     { href: "/your-futures", label: "Your Futures" },
     { href: "/create-futures", label: "Create Futures" },
+    { href: "/mint", label: "Mint Tokens" },
   ];
 
   return (

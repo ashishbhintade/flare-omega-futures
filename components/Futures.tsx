@@ -225,7 +225,12 @@ export default function Futures() {
                       handleApprove();
                     }
                   }}
-                  className="mt-auto inline-block cursor-pointer text-black"
+                  className={`mt-auto inline-block ${
+                    future.status === "fulfilled"
+                      ? "cursor-not-allowed opacity-50"
+                      : "cursor-pointer"
+                  } text-black`}
+                  disabled={future.status === "fulfilled"}
                 >
                   {allowance >= BigInt(100_000)
                     ? `Fulfill @ ${(

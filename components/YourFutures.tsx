@@ -37,7 +37,7 @@ export default function YourFutures() {
 
   useEffect(() => {
     const fetchFutures = async () => {
-      console.log("Fetching policies...");
+      // console.log("Fetching futures...");
       try {
         const currentId = (await publicClient.readContract({
           address: contractAddress,
@@ -65,6 +65,7 @@ export default function YourFutures() {
                 .catch(() => null) // catch errors for missing tokens
           )
         );
+        // console.log("Owner Rsults", ownerResults);
 
         // 2. Filter only tokens owned by the account
         const ownedTokenIds = ownerResults
@@ -78,6 +79,7 @@ export default function YourFutures() {
           setFutures([]);
           return;
         }
+        // console.log("Owner Ids", ownedTokenIds);
 
         // 3. Fetch future details for owned tokens
         const futureDetails = await Promise.all(
@@ -92,6 +94,7 @@ export default function YourFutures() {
               .then((data) => ({ id, data }))
           )
         );
+        // console.log("Future Details", futureDetails);
 
         const mapStatus = (statusNumber: number): Status => {
           switch (statusNumber) {
@@ -119,7 +122,7 @@ export default function YourFutures() {
 
         setFutures(futuresFormatted);
 
-        console.log("Formatted Futures:", futuresFormatted);
+        // console.log("Formatted Futures:", futuresFormatted);
       } catch (err) {
         console.error("Error fetching policies:", err);
       }

@@ -1,9 +1,9 @@
-import CreateFuture from "@/components/CreateFuture";
+import Mint from "@/components/Mint";
 
 export default function CreateFuturePage() {
   return (
     <div>
-      <CreateFuture />
+      <Mint />
     </div>
   );
 }
