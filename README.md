@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Omega Futures
 
-## Getting Started
+Trade any commodity you like, from potatoes to butter, with ease. Built using Flare FDC, Hardhat, and Next.js on the Flare Coston 2 Testnet.
 
-First, run the development server:
+## Run the Project Locally
+
+Start by cloning the repository with this command:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/ashishbhintade/flare-omega-futures.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Next.js App
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To run the Next.js app locally, first install the dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+yarn
+```
 
-## Learn More
+Then start the app:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+yarn dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Live Demo
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+You can try the live demo here: [https://flare-omega-futures.vercel.app/](https://flare-omega-futures.vercel.app/)
 
-## Deploy on Vercel
+## Architecture
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application has three main parts:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- User
+- Bot (which sends updates to the contract through FDC)
+- Contract
+
+### Interaction with the Contract
+
+The following diagram shows how users and the bot interact with the contract:
+
+![Diagram showing which functions users and the bot interact with](./public/contract-interaction.png)
+
+### User Interaction
+
+Here is more detail about how users interact with the contract and what each function does:
+
+![Diagram showing which contract functions users can use and what they are for](./public/user-interaction.png)
+
+### Full Contract Flow
+
+The diagram below shows the full flow of how the user, bot, and contract interact step-by-step:
+
+![Diagram showing interaction between every entity](./public/full-flow.png)
