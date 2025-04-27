@@ -116,6 +116,15 @@ export default function CreateFuture() {
           </select>
         </div>
 
+        <div className="mx-6">
+          <ul className="tree-view text-black">
+            <li>Current Prices for Commodities:</li>
+            <li>Potato: 17.50</li>
+            <li>Butter: 7413</li>
+            <li>Crude Oil: 67</li>
+          </ul>
+        </div>
+
         <div className="field-row-stacked mx-6">
           <label
             htmlFor="value"
