@@ -13,7 +13,7 @@ export default function NotConnected() {
           </div>
         </div>
         <div className="mx-6">
-          <h3 className="text-2xl font-semibold mb-4 mt-6">
+          <h3 className="text-2xl font-semibold mb-4 mt-6 text-black">
             You Wallet is not Connected
           </h3>
           <p className="text-gray-600 text-lg mb-6 text-center">

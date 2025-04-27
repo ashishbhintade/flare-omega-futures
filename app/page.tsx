@@ -11,7 +11,7 @@ export default function Home() {
       {isConnected ? (
         <div>
           <ul className="tree-view rounded-lg">
-            <li className="text-center text-[15px]">
+            <li className="text-center text-[15px] text-black">
               Make sure you mint some tokens before interacting
             </li>
           </ul>
